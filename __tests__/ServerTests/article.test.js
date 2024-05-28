@@ -23,7 +23,6 @@ describe('GET /api/articles/:article_id', () => {
   it('should return an article by its ID with all properties listed', async () => {
     const articleId = 1
     const res = await request(app).get(`/api/articles/${articleId}`)
-
     expect(res.body).toHaveProperty('title')
     expect(res.body).toHaveProperty('author')
     expect(res.body).toHaveProperty('article_id')
