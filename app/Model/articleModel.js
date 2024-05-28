@@ -33,6 +33,6 @@ exports.fetchAllArticles = async () => {
     GROUP BY articles.article_id
     ORDER BY articles.created_at DESC;
     `)
-    
+
   return result.rows
 }
