@@ -34,3 +34,17 @@ describe('GET /api/articles/:article_id', () => {
     expect(res.body).toHaveProperty('article_img_url')
   })
 })
+
+describe('Invalids paths', () => {
+  it('should return 404 for article_id that does not exist in the database (e.g., /9999999)', async () => {
+    const res = await request(app).get(`/api/articles/9999999`)
+    expect(res.statusCode).toBe(404)
+    expect(res.body.message).toBe('Article not found.')
+  })
+
+  it('should return 400 for a bad article_id (e.g., /dog)', async () => {
+    const res = await request(app).get('/api/articles/dog')
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Bad request.')
+  })
+})
