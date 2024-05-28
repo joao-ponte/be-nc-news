@@ -47,3 +47,23 @@ describe('Invalids paths', () => {
     expect(res.body.message).toBe('Bad request.')
   })
 })
+
+describe('GET /api/articles', () => {
+    it('should return an array of articles with status code 200', async () => {
+      const res = await request(app).get('/api/articles');
+      expect(res.statusCode).toBe(200);
+      expect(Array.isArray(res.body.articles)).toBe(true);
+      res.body.articles.forEach(article => {
+        expect(article).toHaveProperty('author');
+        expect(article).toHaveProperty('title');
+        expect(article).toHaveProperty('article_id');
+        expect(article).toHaveProperty('topic');
+        expect(article).toHaveProperty('created_at');
+        expect(article).toHaveProperty('votes');
+        expect(article).toHaveProperty('article_img_url');
+        expect(article).toHaveProperty('comment_count');
+        expect(article).not.toHaveProperty('body');
+      });
+    });
+      
+  });

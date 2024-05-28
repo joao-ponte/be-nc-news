@@ -1,4 +1,4 @@
-const { fetchArticleByID } = require('../Model/articleModel')
+const { fetchArticleByID, fetchAllArticles } = require('../Model/articleModel')
 
 exports.getArticleByID = async (req, res, next) => {
   try {
@@ -14,5 +14,14 @@ exports.getArticleByID = async (req, res, next) => {
     } else {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
+  }
+}
+
+exports.getAllArticles = async (req, res, next) => {
+  try {
+    const articles = await fetchAllArticles()
+    res.status(200).send(articles)
+  } catch (error) {
+    next(error)
   }
 }
