@@ -14,6 +14,6 @@ describe('Invalid path handling', () => {
   it('should return 404 for an invalid path', async () => {
     const res = await request(app).get('/api/monkeys')
     expect(res.statusCode).toEqual(404)
-    expect(res.body.message).toBe('Not found')
+    expect(res.body.message).toBe('Invalid path')
   })
 })
