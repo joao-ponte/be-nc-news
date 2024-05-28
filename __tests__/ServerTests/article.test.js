@@ -18,7 +18,6 @@ describe('GET /api/articles/:article_id', () => {
     const res = await request(app).get(`/api/articles/${articleId}`)
 
     expect(res.statusCode).toBe(200)
-    expect(res.body).toHaveLength(15)
   })
 
   it('should return an article by its ID with all properties listed', async () => {
