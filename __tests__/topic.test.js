@@ -17,5 +17,10 @@ describe('GET /api/topics', () => {
     const res = await request(app).get('/api/topics')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveLength(3)
+
+    res.body.forEach((topic) => {
+      expect(topic).toHaveProperty('slug')
+      expect(topic).toHaveProperty('description')
+    })
   })
 })
