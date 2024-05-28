@@ -1,13 +1,13 @@
-const app = require('../app/app')
+const app = require('../../app/app')
 const request = require('supertest')
-const db = require('../db/connection')
-const seed = require('../db/seeds/seed')
+const db = require('../../db/connection')
+const seed = require('../../db/seeds/seed')
 const {
   topicData,
   userData,
   articleData,
   commentData,
-} = require('../db/data/test-data/index')
+} = require('../../db/data/test-data/index')
 
 beforeAll(() => seed({ topicData, userData, articleData, commentData }))
 afterAll(() => db.end())
