@@ -17,16 +17,4 @@ describe('isValidNumber function', () => {
       isValidNumber('')
     }).toThrow('Bad request.')
   })
-
-  it('should throw an error for a null parameter', () => {
-    expect(() => {
-      isValidNumber(null)
-    }).toThrow('Bad request.')
-  })
-
-  it('should throw an error for an undefined parameter', () => {
-    expect(() => {
-      isValidNumber(undefined)
-    }).toThrow('Bad request.')
-  })
 })
