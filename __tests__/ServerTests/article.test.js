@@ -23,14 +23,20 @@ describe('GET /api/articles/:article_id', () => {
   it('should return an article by its ID with all properties listed', async () => {
     const articleId = 1
     const res = await request(app).get(`/api/articles/${articleId}`)
-    expect(res.body).toHaveProperty('title')
-    expect(res.body).toHaveProperty('author')
-    expect(res.body).toHaveProperty('article_id')
-    expect(res.body).toHaveProperty('body')
-    expect(res.body).toHaveProperty('topic')
-    expect(res.body).toHaveProperty('created_at')
-    expect(res.body).toHaveProperty('votes')
-    expect(res.body).toHaveProperty('article_img_url')
+    const expectedProperties = [
+      'title',
+      'author',
+      'article_id',
+      'body',
+      'topic',
+      'created_at',
+      'votes',
+      'article_img_url',
+    ]
+
+    expectedProperties.forEach((property) => {
+      expect(res.body[property]).toBeDefined()
+    })
   })
 })
 
@@ -45,5 +51,30 @@ describe('Invalids paths', () => {
     const res = await request(app).get('/api/articles/dog')
     expect(res.statusCode).toBe(400)
     expect(res.body.message).toBe('Bad request.')
+  })
+})
+
+describe('GET /api/articles', () => {
+  it('should return an array of articles with status code 200', async () => {
+    const res = await request(app).get('/api/articles')
+    expect(res.statusCode).toBe(200)
+
+    const expectedProperties = [
+      'author',
+      'title',
+      'article_id',
+      'topic',
+      'created_at',
+      'votes',
+      'article_img_url',
+      'comment_count',
+    ]
+
+    res.body.forEach((article) => {
+      expectedProperties.forEach((property) => {
+        expect(article).toHaveProperty(property)
+      })
+      expect(article).not.toHaveProperty('body')
+    })
   })
 })
