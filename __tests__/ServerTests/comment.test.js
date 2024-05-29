@@ -15,6 +15,7 @@ afterAll(() => db.end())
 describe('GET /api/articles/:article_id/comments', () => {
   it('200: should return an array of comments for the given article_id', async () => {
     const res = await request(app).get('/api/articles/1/comments')
+    expect(res.body).toHaveLength(11)
     expect(res.statusCode).toBe(200)
 
     const expectedProperties = [
