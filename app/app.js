@@ -3,6 +3,7 @@ const { getTopics } = require('./Controllers/topicController')
 const {
   getArticleByID,
   getAllArticles,
+  patchArticleVotes,
 } = require('./Controllers/articleController')
 const {
   getCommentsByArticleID,
@@ -17,6 +18,7 @@ app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:article_id', getArticleByID)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleID)
 app.post('/api/articles/:article_id/comments', addCommentToArticle)
+app.patch('/api/articles/:article_id', patchArticleVotes)
 
 const endpoints = require('../endpoints.json')
 app.get('/api', (req, res) => {
