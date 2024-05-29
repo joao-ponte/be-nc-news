@@ -15,13 +15,12 @@ afterAll(() => db.end())
 describe('GET /api/articles/:article_id', () => {
   it('should return an article by its ID with status code 200', async () => {
     const articleId = 1
-    const res = await request(app).get(`/api/articles/${articleId}`)
-    expect(res.statusCode).toBe(200)
+    await request(app).get(`/api/articles/${articleId}`).expect(200)
   })
 
   it('should return an article by its ID with all properties listed', async () => {
     const articleId = 1
-    const res = await request(app).get(`/api/articles/${articleId}`)
+    const { body } = await request(app).get(`/api/articles/${articleId}`)
     const expectedProperties = [
       'title',
       'author',
@@ -34,31 +33,28 @@ describe('GET /api/articles/:article_id', () => {
     ]
 
     expectedProperties.forEach((property) => {
-      expect(res.body[property]).toBeDefined()
+      expect(body[property]).toBeDefined()
     })
   })
 })
 
-describe('Invalids paths', () => {
+describe('Invalid paths', () => {
   it('should return 404 for article_id that does not exist in the database (e.g., /9999999)', async () => {
-    const res = await request(app).get(`/api/articles/9999999`)
-    expect(res.statusCode).toBe(404)
-    expect(res.body.message).toBe('Article not found.')
+    const { body } = await request(app).get(`/api/articles/9999999`).expect(404)
+    expect(body.message).toBe('Article not found.')
   })
 
   it('should return 400 for a bad article_id (e.g., /dog)', async () => {
-    const res = await request(app).get('/api/articles/dog')
-    expect(res.statusCode).toBe(400)
-    expect(res.body.message).toBe('Bad request.')
+    const { body } = await request(app).get('/api/articles/dog').expect(400)
+    expect(body.message).toBe('Bad request.')
   })
 })
 
 describe('GET /api/articles', () => {
   it('should return an array of articles with status code 200', async () => {
-    const res = await request(app).get('/api/articles')
-    expect(res.statusCode).toBe(200)
-    expect(res.body).toHaveLength(13)
-    expect(res.body).toBeSortedBy('created_at', { descending: true })
+    const { body } = await request(app).get('/api/articles').expect(200)
+    expect(body).toHaveLength(13)
+    expect(body).toBeSortedBy('created_at', { descending: true })
 
     const expectedProperties = [
       'author',
@@ -71,7 +67,7 @@ describe('GET /api/articles', () => {
       'comment_count',
     ]
 
-    res.body.forEach((article) => {
+    body.forEach((article) => {
       expectedProperties.forEach((property) => {
         expect(article).toHaveProperty(property)
       })
