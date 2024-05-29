@@ -1,4 +1,5 @@
 const { fetchCommentsByArticleID } = require('../Model/commentModel')
+const {checkExists} = require('../Model/utilsModel')
 
 exports.getCommentsByArticleID = async (req, res, next) => {
   try {
@@ -6,6 +7,8 @@ exports.getCommentsByArticleID = async (req, res, next) => {
     if (isNaN(article_id)) {
       return res.status(400).send({ message: 'Bad request.' })
     }
+    const existID = await checkExists('articles', 'article_id', article_id)
+    console.log(existID)
     const comments = await fetchCommentsByArticleID(article_id)
     res.status(200).send(comments)
   } catch (error) {
