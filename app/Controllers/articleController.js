@@ -1,4 +1,5 @@
 const { fetchArticleByID, fetchAllArticles } = require('../Model/articleModel')
+const { checkExists } = require('../Model/utilsModel')
 
 exports.getArticleByID = async (req, res, next) => {
   try {
@@ -6,6 +7,7 @@ exports.getArticleByID = async (req, res, next) => {
     if (isNaN(article_id)) {
       return res.status(400).send({ message: 'Bad request.' })
     }
+    await checkExists('articles', 'article_id', article_id)
     const article = await fetchArticleByID(article_id)
     res.status(200).send(article)
   } catch (error) {
