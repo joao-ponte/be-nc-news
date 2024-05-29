@@ -28,10 +28,11 @@ exports.addCommentToArticle = async (req, res, next) => {
     const { username, body } = req.body
 
     if (!username || !body) {
-      return res.status(400).res({ message: 'Username and body are required.' })
+      return res.status(400).send({ message: 'Username and body are required.' })
     }
     const newComment = await addComment(article_id, username, body)
-    res.status(201).res(newComment)
+    console.log(newComment)
+    res.status(201).send(newComment)
   } catch (error) {
     next(error)
   }

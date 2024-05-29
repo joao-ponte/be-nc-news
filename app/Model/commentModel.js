@@ -18,15 +18,19 @@ exports.addComment = async (article_id, username, body) => {
   try {
     const result = await db.query(
       `
-      INSERT INTO comments (article_id, author, body)
-      VALUES ($1, $2, $3)
-      RETURNING *
+        INSERT INTO comments (article_id, author, body)
+        VALUES ($1, $2, $3)
+        RETURNING *
       `,
       [article_id, username, body]
     )
+    if (result.rows.length === 0) {
+      throw new Error('Failed to insert comment')
+    }
 
     return result.rows[0]
   } catch (error) {
+    console.error('Error adding comment:', error)
     throw error
   }
 }

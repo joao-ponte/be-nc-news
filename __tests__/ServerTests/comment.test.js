@@ -51,3 +51,26 @@ describe('GET /api/articles/:article_id/comments', () => {
     expect(res.body.message).toBe('Bad request.')
   })
 })
+
+describe('POST /api/articles/:article_id/comments', () => {
+  it('should add a comment to the specified article and return the new comment with status code 201', async () => {
+    const initialCommentsRes = await request(app).get(
+      '/api/articles/1/comments'
+    )
+    const initialCommentsCount = initialCommentsRes.body.length
+
+    const res = await request(app)
+      .post('/api/articles/1/comments')
+      .send({ username: 'butter_bridge', body: 'Test comment' })
+
+    const updatedCommentsRes = await request(app).get(
+      '/api/articles/1/comments'
+    )
+    const updatedCommentsCount = updatedCommentsRes.body.length
+
+    expect(res.statusCode).toBe(201)
+    expect(updatedCommentsCount).toBe(initialCommentsCount + 1)
+    expect(res.body).toHaveProperty('comment_id')
+    expect(res.body).toHaveProperty('article_id', 1)
+  })
+})
