@@ -16,7 +16,6 @@ describe('GET /api/articles/:article_id', () => {
   it('should return an article by its ID with status code 200', async () => {
     const articleId = 1
     const res = await request(app).get(`/api/articles/${articleId}`)
-
     expect(res.statusCode).toBe(200)
   })
 
