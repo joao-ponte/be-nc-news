@@ -4,13 +4,19 @@ const {
   getArticleByID,
   getAllArticles,
 } = require('./Controllers/articleController')
-const { getCommentsByArticleID } = require('./Controllers/commentController')
+const {
+  getCommentsByArticleID,
+  addCommentToArticle,
+} = require('./Controllers/commentController')
+
 const app = express()
+app.use(express.json)
 
 app.get('/api/topics', getTopics)
 app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:article_id', getArticleByID)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleID)
+app.post('/api/articles/:article_id/comments', addCommentToArticle)
 
 const endpoints = require('../endpoints.json')
 app.get('/api', (req, res) => {
