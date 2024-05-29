@@ -57,6 +57,8 @@ describe('GET /api/articles', () => {
   it('should return an array of articles with status code 200', async () => {
     const res = await request(app).get('/api/articles')
     expect(res.statusCode).toBe(200)
+    expect(res.body).toHaveLength(13)
+    expect(res.body).toBeSortedBy('created_at', { descending: true })
 
     const expectedProperties = [
       'author',
