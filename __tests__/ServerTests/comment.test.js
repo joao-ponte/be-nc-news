@@ -120,7 +120,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(404)
 
-    expect(body.message).toBe('Resource not found')
+    expect(body.message).toBe('Article not found.')
   })
 })
 
