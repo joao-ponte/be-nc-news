@@ -72,5 +72,50 @@ describe('POST /api/articles/:article_id/comments', () => {
     expect(updatedCommentsCount).toBe(initialCommentsCount + 1)
     expect(res.body).toHaveProperty('comment_id')
     expect(res.body).toHaveProperty('article_id', 1)
+    expect(res.body).toHaveProperty('author', 'butter_bridge')
+    expect(res.body).toHaveProperty('body', 'Test comment')
+  })
+
+  it('should return a 400 Bad Request error if username is missing', async () => {
+    const res = await request(app)
+      .post('/api/articles/1/comments')
+      .send({ body: 'Test comment' })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Username and body are required.')
+  })
+
+  it('should return a 400 Bad Request error if body is missing', async () => {
+    const res = await request(app)
+      .post('/api/articles/1/comments')
+      .send({ username: 'butter_bridge' })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Username and body are required.')
+  })
+
+  it('should return a 400 Bad Request error if both username and body are missing', async () => {
+    const res = await request(app).post('/api/articles/1/comments').send({})
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Username and body are required.')
+  })
+
+  it('should return a 400 Bad Request error if the data types of request parameters are incorrect', async () => {
+    const res = await request(app)
+      .post(`/api/articles/dog/comments`)
+      .send({ username: 'butter_bridge', body: 'Test comment' })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Bad request.')
+  })
+
+  it('should return a 404 Not Found error if the article ID does not exist', async () => {
+    const res = await request(app)
+      .post(`/api/articles/999999/comments`)
+      .send({ username: 'butter_bridge', body: 'Test comment' })
+
+    expect(res.statusCode).toBe(404)
+    expect(res.body.message).toBe('Resource not found')
   })
 })

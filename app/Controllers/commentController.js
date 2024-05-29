@@ -27,9 +27,16 @@ exports.addCommentToArticle = async (req, res, next) => {
     const { article_id } = req.params
     const { username, body } = req.body
 
-    if (!username || !body) {
-      return res.status(400).send({ message: 'Username and body are required.' })
+    if (isNaN(article_id)) {
+      return res.status(400).send({ message: 'Bad request.' })
     }
+
+    if (!username || !body) {
+      return res
+        .status(400)
+        .send({ message: 'Username and body are required.' })
+    }
+    await checkExists('articles', 'article_id', article_id)
     const newComment = await addComment(article_id, username, body)
     console.log(newComment)
     res.status(201).send(newComment)
