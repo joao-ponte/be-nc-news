@@ -1,6 +1,7 @@
 const {
   fetchCommentsByArticleID,
   addComment,
+  deleteComment,
 } = require('../Model/commentModel')
 const { checkExists } = require('../Model/utilsModel')
 
@@ -40,6 +41,20 @@ exports.addCommentToArticle = async (req, res, next) => {
     const newComment = await addComment(article_id, username, body)
     console.log(newComment)
     res.status(201).send(newComment)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.deleteCommentByID = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params
+    if (isNaN(comment_id) || !comment_id) {
+      return res.status(400).send({ message: 'Bad request.' })
+    }
+    await checkExists('comments', 'comment_id', comment_id)
+    await deleteComment(comment_id)
+    res.status(204).send()
   } catch (error) {
     next(error)
   }

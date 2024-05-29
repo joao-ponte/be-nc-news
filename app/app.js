@@ -8,6 +8,7 @@ const {
 const {
   getCommentsByArticleID,
   addCommentToArticle,
+  deleteCommentByID,
 } = require('./Controllers/commentController')
 
 const app = express()
@@ -19,6 +20,7 @@ app.get('/api/articles/:article_id', getArticleByID)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleID)
 app.post('/api/articles/:article_id/comments', addCommentToArticle)
 app.patch('/api/articles/:article_id', patchArticleVotes)
+app.delete('/api/comments/:comment_id', deleteCommentByID)
 
 const endpoints = require('../endpoints.json')
 app.get('/api', (req, res) => {
