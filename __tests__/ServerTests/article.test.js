@@ -102,6 +102,21 @@ describe('PATCH /api/articles/:article_id', () => {
     expect(updatedVotes).toBe(initialVotes + 1)
   })
 
+  it('should decrease the votes of the specified article and return the updated article with status code 200', async () => {
+    const { body: initialArticle } = await request(app).get('/api/articles/1')
+    const initialVotes = initialArticle.votes
+
+    await request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: -1 })
+      .expect(200)
+
+    const { body: updatedArticle } = await request(app).get('/api/articles/1')
+    const updatedVotes = updatedArticle.votes
+
+    expect(updatedVotes).toBe(initialVotes - 1)
+  })
+
   it('should return 400 Bad Request if the article_id is not a number', async () => {
     const { body } = await request(app)
       .patch('/api/articles/dog')
