@@ -1,4 +1,7 @@
-const { fetchCommentsByArticleID } = require('../Model/commentModel')
+const {
+  fetchCommentsByArticleID,
+  addComment,
+} = require('../Model/commentModel')
 const { checkExists } = require('../Model/utilsModel')
 
 exports.getCommentsByArticleID = async (req, res, next) => {
@@ -16,5 +19,20 @@ exports.getCommentsByArticleID = async (req, res, next) => {
     } else {
       return res.status(500).send({ message: 'Internal Server Error' })
     }
+  }
+}
+
+exports.addCommentToArticle = async (req, res, next) => {
+  try {
+    const { article_id } = req.params
+    const { username, body } = req.body
+
+    if (!username || !body) {
+      return res.status(400).res({ message: 'Username and body are required.' })
+    }
+    const newComment = await addComment(article_id, username, body)
+    res.status(201).res(newComment)
+  } catch (error) {
+    next(error)
   }
 }
