@@ -75,3 +75,66 @@ describe('GET /api/articles', () => {
     })
   })
 })
+
+describe('PATCH /api/articles/:article_id', () => {
+  it('should update the votes of the specified article and return the updated article with status code 200', async () => {
+    const { body } = await request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 1 })
+      .expect(200)
+
+    expect(body).toHaveProperty('article_id', 1)
+    expect(body.votes).toBe(101)
+  })
+
+  it('should update the votes of the specified article and return the updated article with status code 200', async () => {
+    const { body: initialArticle } = await request(app).get('/api/articles/1')
+    const initialVotes = initialArticle.votes
+
+    await request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 1 })
+      .expect(200)
+
+    const { body: updatedArticle } = await request(app).get('/api/articles/1')
+    const updatedVotes = updatedArticle.votes
+
+    expect(updatedVotes).toBe(initialVotes + 1)
+  })
+
+  it('should return 400 Bad Request if the article_id is not a number', async () => {
+    const { body } = await request(app)
+      .patch('/api/articles/dog')
+      .send({ inc_votes: 1 })
+      .expect(400)
+
+    expect(body.message).toBe('Bad request.')
+  })
+
+  it('should return 400 Bad Request if inc_votes is not a number', async () => {
+    const { body } = await request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 'one' })
+      .expect(400)
+
+    expect(body.message).toBe('Invalid data type.')
+  })
+
+  it('should return a 400 Bad Request error if inc_votes is missing', async () => {
+    const { body } = await request(app)
+      .patch('/api/articles/1')
+      .send({})
+      .expect(400)
+
+    expect(body.message).toBe('inc_votes is required.')
+  })
+
+  it('should return 404 Not Found if the article_id does not exist', async () => {
+    const { body } = await request(app)
+      .patch('/api/articles/999999')
+      .send({ inc_votes: 1 })
+      .expect(404)
+
+    expect(body.message).toBe('Resource not found')
+  })
+})

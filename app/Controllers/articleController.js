@@ -37,6 +37,10 @@ exports.patchArticleVotes = async (req, res, next) => {
     const { article_id } = req.params
     const { inc_votes } = req.body
 
+    if (inc_votes === undefined) {
+      return res.status(400).send({ message: 'inc_votes is required.' })
+    }
+
     if (isNaN(article_id)) {
       return res.status(400).send({ message: 'Bad request.' })
     }
