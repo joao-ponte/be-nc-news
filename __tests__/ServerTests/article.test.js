@@ -16,7 +16,6 @@ describe('GET /api/articles/:article_id', () => {
   it('should return an article by its ID with status code 200', async () => {
     const articleId = 1
     const res = await request(app).get(`/api/articles/${articleId}`)
-
     expect(res.statusCode).toBe(200)
   })
 
@@ -76,5 +75,34 @@ describe('GET /api/articles', () => {
       })
       expect(article).not.toHaveProperty('body')
     })
+  })
+})
+
+describe('GET /api/articles/:article_id/comments', () => {
+  it('200: should return an array of comments for the given article_id', async () => {
+    const res = await request(app).get('/api/articles/1/comments')
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toHaveLength(11)
+    res.body.forEach((comment) => {
+      expect(comment).toHaveProperty('comment_id')
+      expect(comment).toHaveProperty('votes')
+      expect(comment).toHaveProperty('created_at')
+      expect(comment).toHaveProperty('author')
+      expect(comment).toHaveProperty('body')
+      expect(comment).toHaveProperty('article_id')
+    })
+  })
+
+  it.only('404: should return 404 if article does not exist', async () => {
+    const res = await request(app).get('/api/articles/99999/comments')
+    console.log(res.body)
+    expect(res.statusCode).toBe(404)
+    expect(res.message).toBe('Article not found.')
+  })
+
+  it('400: should return 400 for an invalid article_id', async () => {
+    const res = await request(app).get('/api/articles/invalid/comments')
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toBe('Bad request.')
   })
 })
