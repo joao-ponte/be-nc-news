@@ -43,7 +43,7 @@ describe('GET /api/articles/:article_id/comments', () => {
     const { body } = await request(app)
       .get('/api/articles/99999/comments')
       .expect(404)
-    expect(body.message).toBe('Article not found.')
+    expect(body.message).toBe('Resource not found')
   })
 
   it('400: should return 400 for an invalid article_id', async () => {
@@ -63,7 +63,12 @@ describe('POST /api/articles/:article_id/comments', () => {
 
     const { body: newComment } = await request(app)
       .post('/api/articles/1/comments')
-      .send({ username: 'butter_bridge', body: 'Test comment' })
+      .send({
+        username: 'butter_bridge',
+        body: 'Test comment',
+        unnecessaryProperty: 'This should be ignored',
+        anotherUnnecessaryProperty: 'This should also be ignored',
+      })
       .expect(201)
 
     const { body: updatedComments } = await request(app).get(
@@ -76,6 +81,8 @@ describe('POST /api/articles/:article_id/comments', () => {
     expect(newComment).toHaveProperty('article_id', 1)
     expect(newComment).toHaveProperty('author', 'butter_bridge')
     expect(newComment).toHaveProperty('body', 'Test comment')
+    expect(newComment).not.toHaveProperty('unnecessaryProperty')
+    expect(newComment).not.toHaveProperty('anotherUnnecessaryProperty')
   })
 
   it('should return a 400 Bad Request error if username is missing', async () => {
@@ -110,7 +117,6 @@ describe('POST /api/articles/:article_id/comments', () => {
       .post(`/api/articles/dog/comments`)
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(400)
-
     expect(body.message).toBe('Bad request.')
   })
 
@@ -120,7 +126,16 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(404)
 
-    expect(body.message).toBe('Article not found.')
+    expect(body.message).toBe('Resource not found.')
+  })
+
+  it('should return a 404 Not Found error if the provided username does not exist', async () => {
+    const { body } = await request(app)
+      .post('/api/articles/1/comments')
+      .send({ username: 'non_existent_user', body: 'Test comment' })
+      .expect(404)
+
+    expect(body.message).toBe('Resource not found.')
   })
 })
 
