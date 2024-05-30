@@ -50,7 +50,7 @@ describe('GET /api/articles/:article_id/comments', () => {
     const { body } = await request(app)
       .get('/api/articles/invalid/comments')
       .expect(400)
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 })
 
@@ -117,7 +117,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .post(`/api/articles/dog/comments`)
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(400)
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 
   it('should return a 404 Not Found error if the article ID does not exist', async () => {
@@ -126,7 +126,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(404)
 
-    expect(body.message).toBe('Resource not found.')
+    expect(body.message).toBe('Resource not found')
   })
 
   it('should return a 404 Not Found error if the provided username does not exist', async () => {
@@ -135,7 +135,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send({ username: 'non_existent_user', body: 'Test comment' })
       .expect(404)
 
-    expect(body.message).toBe('Resource not found.')
+    expect(body.message).toBe('Resource not found')
   })
 })
 
@@ -170,6 +170,6 @@ describe('DELETE /api/comments/:comment_id', () => {
   it('should return a 400 Bad Request error if comment_id parameter is not a valid number', async () => {
     const { body } = await request(app).delete('/api/comments/abc').expect(400)
 
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 })

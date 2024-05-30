@@ -41,12 +41,12 @@ describe('GET /api/articles/:article_id', () => {
 describe('Invalid paths', () => {
   it('should return 404 for article_id that does not exist in the database (e.g., /9999999)', async () => {
     const { body } = await request(app).get(`/api/articles/9999999`).expect(404)
-    expect(body.message).toBe('Article not found.')
+    expect(body.message).toBe('Resource not found')
   })
 
   it('should return 400 for a bad article_id (e.g., /dog)', async () => {
     const { body } = await request(app).get('/api/articles/dog').expect(400)
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 })
 
@@ -73,6 +73,52 @@ describe('GET /api/articles', () => {
       })
       expect(article).not.toHaveProperty('body')
     })
+  })
+})
+
+describe('GET /api/articles (topic query)', () => {
+  it('200: should return an array of articles filtered by topic', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?topic=mitch')
+      .expect(200)
+
+    expect(body).toHaveLength(12)
+    body.forEach((article) => {
+      expect(article.topic).toBe('mitch')
+    })
+  })
+
+  it('should verify that each article in the response has all expected properties', async () => {
+    const { body } = await request(app).get('/api/articles').expect(200)
+    const expectedProperties = [
+      'author',
+      'title',
+      'article_id',
+      'topic',
+      'created_at',
+      'votes',
+      'article_img_url',
+      'comment_count',
+    ]
+    body.forEach((article) => {
+      expectedProperties.forEach((property) => {
+        expect(article).toHaveProperty(property)
+      })
+    })
+  })
+
+  it('404: should return 404 if the topic does not exist', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?topic=invalid_topic')
+      .expect(404)
+    expect(body.message).toBe('Resource not found')
+  })
+
+  it('should return an empty array if no articles match the specified topic', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?topic=paper')
+      .expect(200)
+    expect(body).toHaveLength(0)
   })
 })
 
@@ -123,7 +169,7 @@ describe('PATCH /api/articles/:article_id', () => {
       .send({ inc_votes: 1 })
       .expect(400)
 
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 
   it('should return 400 Bad Request if inc_votes is not a number', async () => {
@@ -132,7 +178,7 @@ describe('PATCH /api/articles/:article_id', () => {
       .send({ inc_votes: 'one' })
       .expect(400)
 
-    expect(body.message).toBe('Invalid data type.')
+    expect(body.message).toBe('Bad request')
   })
 
   it('should return a 400 Bad Request error if inc_votes is missing', async () => {
