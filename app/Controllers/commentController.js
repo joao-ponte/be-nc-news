@@ -1,15 +1,15 @@
 const {
   fetchCommentsByArticleID,
   addComment,
+  deleteComment,
 } = require('../Model/commentModel')
 const { checkExists } = require('../Model/utilsModel')
+const { isValidNumber } = require('./utilsController.js')
 
 exports.getCommentsByArticleID = async (req, res, next) => {
   try {
     const { article_id } = req.params
-    if (isNaN(article_id)) {
-      return res.status(400).send({ message: 'Bad request.' })
-    }
+    isValidNumber(article_id)
     await checkExists('articles', 'article_id', article_id)
     const comments = await fetchCommentsByArticleID(article_id)
     res.status(200).send(comments)
@@ -17,7 +17,7 @@ exports.getCommentsByArticleID = async (req, res, next) => {
     if (error.status === 404) {
       return res.status(404).send({ message: 'Article not found.' })
     } else {
-      return res.status(500).send({ message: 'Internal Server Error' })
+      return res.status(400).send({ message: error.message })
     }
   }
 }
@@ -27,9 +27,7 @@ exports.addCommentToArticle = async (req, res, next) => {
     const { article_id } = req.params
     const { username, body } = req.body
 
-    if (isNaN(article_id)) {
-      return res.status(400).send({ message: 'Bad request.' })
-    }
+    isValidNumber(article_id)
 
     if (!username || !body) {
       return res
@@ -41,6 +39,27 @@ exports.addCommentToArticle = async (req, res, next) => {
     console.log(newComment)
     res.status(201).send(newComment)
   } catch (error) {
-    next(error)
+    if (error.status === 404) {
+      return res.status(404).send({ message: 'Article not found.' })
+    } else {
+      return res.status(400).send({ message: error.message })
+    }
+  }
+}
+
+exports.deleteCommentByID = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params
+    isValidNumber(comment_id)
+
+    await checkExists('comments', 'comment_id', comment_id)
+    await deleteComment(comment_id)
+    res.status(204).send()
+  } catch (error) {
+    if (error.status === 404) {
+      return res.status(404).send({ message: 'Resource not found' })
+    } else {
+      return res.status(400).send({ message: error.message })
+    }
   }
 }

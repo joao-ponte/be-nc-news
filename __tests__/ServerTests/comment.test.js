@@ -120,6 +120,41 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send({ username: 'butter_bridge', body: 'Test comment' })
       .expect(404)
 
+    expect(body.message).toBe('Article not found.')
+  })
+})
+
+describe('DELETE /api/comments/:comment_id', () => {
+  it('should delete the comment with the given comment_id', async () => {
+    await request(app).delete('/api/comments/1').expect(204)
+  })
+
+  it('should delete the comment with the given comment_id and update the number of comments', async () => {
+    const { body: initialComments } = await request(app).get(
+      '/api/articles/1/comments'
+    )
+    const initialCommentsCount = initialComments.length
+
+    await request(app).delete('/api/comments/2').expect(204)
+
+    const { body: updatedComments } = await request(app).get(
+      '/api/articles/1/comments'
+    )
+    const updatedCommentsCount = updatedComments.length
+
+    expect(updatedCommentsCount).toBe(initialCommentsCount - 1)
+  })
+
+  it('should return 404 if comment_id does not exist', async () => {
+    const { body } = await request(app)
+      .delete('/api/comments/99999')
+      .expect(404)
     expect(body.message).toBe('Resource not found')
+  })
+
+  it('should return a 400 Bad Request error if comment_id parameter is not a valid number', async () => {
+    const { body } = await request(app).delete('/api/comments/abc').expect(400)
+
+    expect(body.message).toBe('Bad request.')
   })
 })
