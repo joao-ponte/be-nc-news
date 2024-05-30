@@ -38,6 +38,19 @@ describe('GET /api/articles/:article_id', () => {
   })
 })
 
+describe('GET /api/articles/:article_id (comment_count)', () => {
+  it('should return an article by its ID with comment_count property', async () => {
+    const { body } = await request(app).get('/api/articles/1').expect(200)
+    expect(body).toHaveProperty('comment_count')
+    expect(typeof body.comment_count).toBe('number')
+  })
+
+  it('should return the correct comment count for the article', async () => {
+    const { body } = await request(app).get('/api/articles/1').expect(200)
+    expect(body.comment_count).toBe(13)
+  })
+})
+
 describe('Invalid paths', () => {
   it('should return 404 for article_id that does not exist in the database (e.g., /9999999)', async () => {
     const { body } = await request(app).get(`/api/articles/9999999`).expect(404)
