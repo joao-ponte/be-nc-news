@@ -9,12 +9,12 @@ describe('isValidNumber function', () => {
   it('should throw an error for an invalid number', () => {
     expect(() => {
       isValidNumber('abc')
-    }).toThrow('Bad request.')
+    }).toThrow('Bad request')
   })
 
   it('should throw an error for an empty parameter', () => {
     expect(() => {
       isValidNumber('')
-    }).toThrow('Bad request.')
+    }).toThrow('Bad request')
   })
 })

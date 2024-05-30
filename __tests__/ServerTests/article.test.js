@@ -41,12 +41,12 @@ describe('GET /api/articles/:article_id', () => {
 describe('Invalid paths', () => {
   it('should return 404 for article_id that does not exist in the database (e.g., /9999999)', async () => {
     const { body } = await request(app).get(`/api/articles/9999999`).expect(404)
-    expect(body.message).toBe('Article not found.')
+    expect(body.message).toBe('Resource not found')
   })
 
   it('should return 400 for a bad article_id (e.g., /dog)', async () => {
     const { body } = await request(app).get('/api/articles/dog').expect(400)
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 })
 
@@ -123,7 +123,7 @@ describe('PATCH /api/articles/:article_id', () => {
       .send({ inc_votes: 1 })
       .expect(400)
 
-    expect(body.message).toBe('Bad request.')
+    expect(body.message).toBe('Bad request')
   })
 
   it('should return 400 Bad Request if inc_votes is not a number', async () => {
@@ -132,7 +132,7 @@ describe('PATCH /api/articles/:article_id', () => {
       .send({ inc_votes: 'one' })
       .expect(400)
 
-    expect(body.message).toBe('Invalid data type.')
+    expect(body.message).toBe('Bad request')
   })
 
   it('should return a 400 Bad Request error if inc_votes is missing', async () => {
