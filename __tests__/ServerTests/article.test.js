@@ -35,6 +35,7 @@ describe('GET /api/articles/:article_id', () => {
     expectedProperties.forEach((property) => {
       expect(body).toHaveProperty(property)
     })
+    expect(typeof body.comment_count).toBe('number')
   })
 })
 
@@ -46,7 +47,7 @@ describe('GET /api/articles/:article_id (comment_count)', () => {
 
   it('should return the correct comment count for the article', async () => {
     const { body } = await request(app).get('/api/articles/1').expect(200)
-    expect(body.comment_count).toBe('11')
+    expect(body.comment_count).toBe(11)
   })
 })
 
