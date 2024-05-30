@@ -20,6 +20,9 @@ exports.getArticleByID = async (req, res, next) => {
 exports.getAllArticles = async (req, res, next) => {
   try {
     const { topic } = req.query
+    if (topic) {
+      await checkExists('topics', 'slug', topic)
+    }
     const articles = await fetchAllArticles(topic)
     res.status(200).send(articles)
   } catch (error) {
