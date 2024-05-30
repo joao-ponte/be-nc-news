@@ -28,6 +28,7 @@ exports.fetchAllArticles = async (topic) => {
   `
   const queryParams = []
 
+  
   if (topic) {
     queryStr += `WHERE articles.topic = $1 `
     queryParams.push(topic)

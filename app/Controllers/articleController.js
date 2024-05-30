@@ -19,7 +19,8 @@ exports.getArticleByID = async (req, res, next) => {
 
 exports.getAllArticles = async (req, res, next) => {
   try {
-    const articles = await fetchAllArticles()
+    const { topic } = req.query
+    const articles = await fetchAllArticles(topic)
     res.status(200).send(articles)
   } catch (error) {
     next(error)
