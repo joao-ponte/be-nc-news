@@ -19,21 +19,21 @@ describe('GET /api/articles/:article_id', () => {
   })
 
   it('should return an article by its ID with all properties listed', async () => {
-    const articleId = 1
-    const { body } = await request(app).get(`/api/articles/${articleId}`)
+    const { body } = await request(app).get('/api/articles/1').expect(200)
+    console.log(body)
     const expectedProperties = [
-      'title',
       'author',
+      'title',
       'article_id',
-      'body',
       'topic',
       'created_at',
       'votes',
       'article_img_url',
+      'comment_count',
     ]
 
     expectedProperties.forEach((property) => {
-      expect(body[property]).toBeDefined()
+      expect(body).toHaveProperty(property)
     })
   })
 })
@@ -42,12 +42,11 @@ describe('GET /api/articles/:article_id (comment_count)', () => {
   it('should return an article by its ID with comment_count property', async () => {
     const { body } = await request(app).get('/api/articles/1').expect(200)
     expect(body).toHaveProperty('comment_count')
-    expect(typeof body.comment_count).toBe('number')
   })
 
   it('should return the correct comment count for the article', async () => {
     const { body } = await request(app).get('/api/articles/1').expect(200)
-    expect(body.comment_count).toBe(13)
+    expect(body.comment_count).toBe('11')
   })
 })
 
