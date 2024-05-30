@@ -14,11 +14,10 @@ afterAll(() => db.end())
 
 describe('GET /api/topics', () => {
   it('should return all topics', async () => {
-    const res = await request(app).get('/api/topics')
-    expect(res.statusCode).toEqual(200)
-    expect(res.body).toHaveLength(3)
+    const { body } = await request(app).get('/api/topics').expect(200)
+    expect(body).toHaveLength(3)
 
-    res.body.forEach((topic) => {
+    body.forEach((topic) => {
       expect(topic).toHaveProperty('slug')
       expect(topic).toHaveProperty('description')
     })
