@@ -12,7 +12,7 @@ You can find the hosted version of the API [here](https://be-nc-news-ttz6.onrend
 
 Follow these instructions to set up a copy of the project on your local machine for development and testing.
 
-### Getting Started
+### Prerequisites
 
 Ensure you have the following software installed on your machine:
 
@@ -28,7 +28,7 @@ git clone https://github.com/joao-ponte/be-nc-news
 cd be-nc-news
 ```
 
-### Cloning the Repository
+### Installing Dependencies
 
 Install the project dependencies by running:
 
@@ -40,13 +40,13 @@ npm install
 
 Create two .env files, one for development and one for testing. These files should be placed in the root directory of the project.
 
-- .env.development
+1. .env.development
 
 ```
 PGDATABASE=nc_news
 ```
 
-- .env.test
+2. .env.test
 
 ```
 PGDATABASE=nc_news_test
@@ -146,7 +146,9 @@ The server will start running on the default port 9090. You can configure the po
 | :----------- | :------- | :----------------------------------- |
 | `article_id` | `string` | **Required**. ID of article to fetch |
 
-Request Body:
+
+**Request Body:**
+
 | Parameter | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `inc_votes` | `number` | **Required**. The number of votes to increment or decrement |
@@ -173,7 +175,7 @@ Request Body:
 | :----------- | :------- | :-------------------------------------------------- |
 | `article_id` | `string` | **Required**. ID of the article to add a comment to |
 
-Request Body:
+**Request Body:**
 | Parameter | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `username` | `string` | **Required**. Username of the commenter |
