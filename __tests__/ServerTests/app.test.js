@@ -460,3 +460,21 @@ describe('GET /api/articles (sorting queries)', () => {
     expect(body.message).toBe('Bad request')
   })
 })
+describe('GET /api/users/:username', () => {
+  it('should return a user by username with status code 200', async () => {
+    const { body } = await request(app)
+      .get('/api/users/butter_bridge')
+      .expect(200)
+    console.log(body)
+    expect(body).toHaveProperty('username', 'butter_bridge')
+    expect(body).toHaveProperty('name')
+    expect(body).toHaveProperty('avatar_url')
+  })
+
+  it('should return 404 if the user does not exist', async () => {
+    const { body } = await request(app)
+      .get('/api/users/nonexistent_user')
+      .expect(404)
+    expect(body.message).toBe('Resource not found')
+  })
+})
