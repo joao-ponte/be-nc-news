@@ -478,3 +478,34 @@ describe('GET /api/users/:username', () => {
     expect(body.message).toBe('Resource not found')
   })
 })
+
+describe('PATCH /api/comments/:comment_id', () => {
+  it('should update the votes on a comment and return the updated comment', async () => {
+    const { body } = await request(app)
+      .patch('/api/comments/1')
+      .send({ inc_votes: 1 })
+      .expect(200)
+
+    expect(body).toHaveProperty('comment_id', 1)
+    expect(body).toHaveProperty('votes')
+    expect(typeof body.votes).toBe('number')
+  })
+
+  it('should return 400 for invalid inc_votes', async () => {
+    const { body } = await request(app)
+      .patch('/api/comments/1')
+      .send({ inc_votes: 'invalid' })
+      .expect(400)
+
+    expect(body).toHaveProperty('message', 'Bad request')
+  })
+
+  it('should return 404 if comment_id does not exist', async () => {
+    const { body } = await request(app)
+      .patch('/api/comments/9999')
+      .send({ inc_votes: 1 })
+      .expect(404)
+
+    expect(body).toHaveProperty('message', 'Resource not found')
+  })
+})

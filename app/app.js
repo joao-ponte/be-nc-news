@@ -13,6 +13,7 @@ const {
   getCommentsByArticleID,
   addCommentToArticle,
   deleteCommentByID,
+  patchCommentVotes,
 } = require('./Controllers/commentController')
 
 const app = express()
@@ -25,6 +26,7 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleID)
 app.post('/api/articles/:article_id/comments', addCommentToArticle)
 app.patch('/api/articles/:article_id', patchArticleVotes)
 app.delete('/api/comments/:comment_id', deleteCommentByID)
+app.patch('/api/comments/:comment_id', patchCommentVotes)
 app.get('/api/users', getAllUsers)
 app.get('/api/users/:username', getUserByUsername)
 

@@ -26,6 +26,20 @@ exports.addComment = async (article_id, username, body) => {
   return result.rows[0]
 }
 
+exports.updateCommentVotes = async (comment_id, inc_votes) => {
+  const result = await db.query(
+    `
+      UPDATE comments
+      SET votes = votes + $1
+      WHERE comment_id = $2
+      RETURNING *
+    `,
+    [inc_votes, comment_id]
+  )
+
+  return result.rows[0]
+}
+
 exports.deleteComment = async (comment_id) => {
   await db.query('DELETE FROM comments WHERE comment_id = $1', [comment_id])
 }

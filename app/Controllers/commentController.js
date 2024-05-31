@@ -2,6 +2,7 @@ const {
   fetchCommentsByArticleID,
   addComment,
   deleteComment,
+  updateCommentVotes,
 } = require('../Model/commentModel')
 const { checkExists } = require('../Model/utilsModel')
 
@@ -28,6 +29,23 @@ exports.addCommentToArticle = async (req, res, next) => {
     }
     const newComment = await addComment(article_id, username, body)
     res.status(201).send(newComment)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.patchCommentVotes = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params
+    const { inc_votes } = req.body
+
+    if (inc_votes === undefined) {
+      return res.status(400).send({ message: 'inc_votes is required.' })
+    }
+
+    await checkExists('comments', 'comment_id', comment_id)
+    const updatedComment = await updateCommentVotes(comment_id, inc_votes)
+    res.status(200).send(updatedComment)
   } catch (error) {
     next(error)
   }
