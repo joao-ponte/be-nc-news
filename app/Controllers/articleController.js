@@ -19,11 +19,11 @@ exports.getArticleByID = async (req, res, next) => {
 
 exports.getAllArticles = async (req, res, next) => {
   try {
-    const { topic } = req.query
+    const { topic, sort_by, order } = req.query
     if (topic) {
       await checkExists('topics', 'slug', topic)
     }
-    const articles = await fetchAllArticles(topic)
+    const articles = await fetchAllArticles(topic, sort_by, order)
     res.status(200).send(articles)
   } catch (error) {
     next(error)

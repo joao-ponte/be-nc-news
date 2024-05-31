@@ -11,7 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles sorted by date in descending order",
-    "queries": ["topic"],
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -110,6 +110,14 @@
           "avatar_url": "https://example.com/avatar.jpg"
         }
       ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "Returns a user by username",
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "Jonny",
+      "avatar_url": "https://www.someavatarurl.com"
     }
   }
 }

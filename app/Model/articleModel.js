@@ -23,7 +23,18 @@ exports.fetchArticleByID = async (article_id) => {
   return result.rows[0]
 }
 
-exports.fetchAllArticles = async (topic) => {
+exports.fetchAllArticles = async (topic, sort_by, order) => {
+  if (
+    sort_by &&
+    !['title', 'topic', 'author', 'created_at', 'votes'].includes(sort_by)
+  ) {
+    return Promise.reject({ status: 400, message: 'Bad request' })
+  }
+
+  if (order && !['asc', 'desc'].includes(order)) {
+    return Promise.reject({ status: 400, message: 'Bad request' })
+  }
+
   let queryStr = `
     SELECT 
     articles.author, 
@@ -46,7 +57,7 @@ exports.fetchAllArticles = async (topic) => {
 
   queryStr += `
   GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC;
+  ORDER BY ${sort_by || 'created_at'} ${order || 'desc'};
 `
   const result = await db.query(queryStr, queryParams)
   return result.rows

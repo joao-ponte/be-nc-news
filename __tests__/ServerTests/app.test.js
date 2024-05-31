@@ -22,7 +22,6 @@ describe('GET /api/articles/:article_id', () => {
 
   it('should return an article by its ID with all properties listed', async () => {
     const { body } = await request(app).get('/api/articles/1').expect(200)
-    console.log(body)
     const expectedProperties = [
       'author',
       'title',
@@ -429,5 +428,35 @@ describe('Utility function: checkExists', () => {
         message: 'Resource not found',
       }
     )
+  })
+})
+
+describe('GET /api/articles (sorting queries)', () => {
+  it('should return articles sorted by the specified column in ascending order when order=asc is provided', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?sort_by=title&order=asc')
+      .expect(200)
+    expect(body).toBeSortedBy('title')
+  })
+
+  it('should return articles sorted by the specified column in descending order when order=desc is provided', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?sort_by=votes&order=desc')
+      .expect(200)
+    expect(body).toBeSortedBy('votes', { descending: true })
+  })
+
+  it('should return 400 Bad Request if sort_by parameter is invalid', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?sort_by=invalid_column')
+      .expect(400)
+    expect(body.message).toBe('Bad request')
+  })
+
+  it('should return 400 Bad Request if order parameter is invalid', async () => {
+    const { body } = await request(app)
+      .get('/api/articles?order=invalid_order')
+      .expect(400)
+    expect(body.message).toBe('Bad request')
   })
 })
